@@ -9,6 +9,8 @@ const {
   findId
 } = require('../model/products')
 
+const client = require('../config/redis')
+
 const commonHelper = require('../helper/common')
 
 const productController = {
@@ -18,7 +20,7 @@ const productController = {
       const limit = Number(req.query.limit) || 5
       const offset = (page - 1) * limit
       const sortby = req.query.sortby || 'product_name'
-      const sort = req.query.sort?.toUpperCase() || 'ASC'// optional chaining
+      const sort = req.query.sort?.toUpperCase() || 'ASC' // optional chaining
       const search = req.query.search || ''
 
       if (search) {
@@ -53,6 +55,7 @@ const productController = {
     try {
       const id = Number(req.params.product_id)
       const result = await selectProduct(id)
+      client.setEx(`product/${id}`,60*60,JSON.stringify(result.rows))
       commonHelper.response(res, result.rows, 200, 'get data success')
     } catch (err) {
       console.log(err)
@@ -61,6 +64,9 @@ const productController = {
   },
   createProduct: async (req, res) => {
     try {
+      const PORT = process.env.PORT || 3000
+      const DB_HOST = process.env.DB_HOST || 'localhost'
+      const image = req.file.filename
       const {
         product_id,
         product_name,
@@ -69,7 +75,6 @@ const productController = {
         color,
         size,
         stock,
-        image,
         rating,
         category_id
       } = req.body
@@ -85,7 +90,7 @@ const productController = {
         color,
         size,
         stock,
-        image,
+        image: `http://${DB_HOST}:${PORT}/img/${image}`,
         rating,
         category_id
       }
@@ -99,15 +104,16 @@ const productController = {
   updateProduct: async (req, res) => {
     try {
       const id = Number(req.params.product_id)
+      const PORT = process.env.PORT || 3000
+      const DB_HOST = process.env.DB_HOST || 'localhost'
+      const image = req.file.filename
       const {
-        product_id,
         product_name,
         brand,
         price,
         color,
         size,
         stock,
-        image,
         rating,
         category_id
       } = req.body
@@ -123,7 +129,7 @@ const productController = {
         color,
         size,
         stock,
-        image,
+        image: `http://${DB_HOST}:${PORT}/img/${image}`,
         rating,
         category_id
       }

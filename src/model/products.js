@@ -65,8 +65,16 @@ const countData = () => {
   return pool.query('SELECT COUNT(*) FROM products')
 }
 
-const findId = (id) => {
-  return pool.query(`SELECT COUNT(*) FROM products WHERE product_id = ${id}`)
+const findId = (product_id) => {
+  return new Promise((resolve, reject) =>
+    pool.query(`SELECT product_id FROM products WHERE Product_id=${product_id}`, (error, result) => {
+      if (!error) {
+        resolve(result)
+      } else {
+        reject(error)
+      }
+    })
+  )
 }
 
 module.exports = {

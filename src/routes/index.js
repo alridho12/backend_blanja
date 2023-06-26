@@ -3,8 +3,9 @@ const router = express.Router()
 const productRouter = require('../routes/products')
 const categoryRouter = require('../routes/categories')
 const ordersRouter = require('../routes/orders')
+const userRouter = require('../routes/users')
 router.use('/products', productRouter)
 router.use('/categories', categoryRouter)
 router.use('/orders', ordersRouter)
-
+router.use('/users', userRouter)
 module.exports = router
