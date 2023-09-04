@@ -10,6 +10,7 @@ const {
 } = require('../model/orders')
 
 const commonHelper = require('../helper/common')
+const { v4: uuidv4 } = require("uuid");
 
 const ordersController = {
   getAllOrder: async (req, res) => {
@@ -17,7 +18,7 @@ const ordersController = {
       const page = Number(req.query.page) || 1
       const limit = Number(req.query.limit) || 5
       const offset = (page - 1) * limit
-      const sortby = req.query.sortby || 'order_id'
+      const sortby = req.query.sortby || 'id_order'
       const sort = req.query.sort?.toUpperCase() || 'ASC'
       const search = req.query.search || ''
 
@@ -51,7 +52,7 @@ const ordersController = {
   },
   getDetailProduct: async (req, res) => {
     try {
-      const id = Number(req.params.product_id)
+      const id =(req.params.product_id)
       const result = await selectProduct(id)
       commonHelper.response(res, result.rows, 200, 'get data success')
     } catch (err) {
@@ -60,44 +61,32 @@ const ordersController = {
     }
   },
   getDetailOrder: async (req, res) => {
-    try {
-      const id = Number(req.params.order_id)
-      const result = await selectOrder(id)
-      commonHelper.response(res, result.rows, 200, 'get data success')
-    } catch (err) {
-      console.log(err)
-      res.status(500).send('Internal Server Error')
+    const id = req.params.id_customer;
+    const { rowCount } = await findId(id);
+    if (!rowCount) {
+        return res.json({ message: "ID is Not Found" })
     }
-  },
+    selectOrder(id)
+        .then((result) => {
+            commonHelper.response(res, result.rows, 200, "get data success");
+        })
+        .catch((err) => res.send(err));
+},
+
   createOrder: async (req, res) => {
     try {
       const {
-        order_id,
-        order_date,
-        address,
-        price,
-        shipping,
-        total_price,
-        payment_method,
         product_id,
-        customer_id,
-        image
+        id_customer,
+        quantity,
       } = req.body
-      const {
-        rows: [count]
-      } = await countData()
-      const id = Number(count.count) + 1
+      const id_order = uuidv4();
+      const { rowCount } = await findId(id_order)
       const data = {
-        order_id: id,
-        order_date,
-        address,
-        price,
-        shipping,
-        total_price,
-        payment_method,
+        id_order, 
         product_id,
-        customer_id,
-        image
+        id_customer,
+        quantity,
       }
       const result = await insertOrder(data)
       commonHelper.response(res, result.rows, 201, 'order created')
@@ -108,9 +97,9 @@ const ordersController = {
   },
   updateOrder: async (req, res) => {
     try {
-      const id = Number(req.params.order_id)
+      const id = Number(req.params.id_order)
       const {
-        order_id,
+        id_order,
         order_date,
         address,
         price,
@@ -126,7 +115,7 @@ const ordersController = {
         return res.json({ message: 'ID is Not Found' })
       }
       const data = {
-        order_id: id,
+        id_order: id,
         order_date,
         address,
         price,
@@ -146,7 +135,7 @@ const ordersController = {
   },
   deleteOrder: async (req, res) => {
     try {
-      const id = Number(req.params.order_id)
+      const id = Number(req.params.id_order)
       const { rowCount } = await findId(id)
       if (!rowCount) {
         return res.json({ message: 'ID is Not Found' })

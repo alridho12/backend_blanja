@@ -2,18 +2,7 @@ const pool = require('../config/db')
 
 const selectAllOrder = (limit, offset, sortby, sort) => {
   return pool.query(
-    // `SELECT orders.order_id, orders.order_date, orders.address, orders.price, orders.shipping, orders.total_price, orders.payment_method, products.product_name, orders.customer_id, orders.image
-    // FROM Orders
-    // JOIN products ON orders.product_id = products.product_id
-    // ORDER BY ${sortby} ${sort} LIMIT ${limit} OFFSET ${offset}
-    // `
-    `SELECT orders.order_id, orders.order_date, orders.address, orders.price, orders.shipping, orders.total_price, orders.payment_method, products.product_name, categories.category
-    FROM Orders
-    JOIN products ON orders.product_id = products.product_id
-    JOIN categories ON products.category_id = categories.category_id
-    ORDER BY ${sortby} ${sort} LIMIT ${limit} OFFSET ${offset}
-    `
-    // `SELECT * FROM orders ORDER BY ${sortby} ${sort} LIMIT ${limit} OFFSET ${offset}`
+    `SELECT * FROM orders ORDER BY ${sortby} ${sort} LIMIT ${limit} OFFSET ${offset}`
   )
 }
 
@@ -23,48 +12,35 @@ const searchOrder = (search, limit, offset, sortby, sort) => {
   )
 }
 
-const selectOrder = (id) => {
-  return pool.query(`SELECT * FROM orders WHERE order_id = ${id}`)
+const selectOrder = (id_customer) => {
+  return pool.query(`SELECT orders.*,products.* FROM orders JOIN products ON orders.product_id = products.product_id WHERE orders.id_customer ='${id_customer}'`)
 }
 
 const insertOrder = (data) => {
   const {
-    order_id,
-    order_date,
-    address,
-    price,
-    shipping,
-    total_price,
-    payment_method,
+    id_order,
     product_id,
-    customer_id,
-    image
+    id_customer,
+    quantity,
   } = data
   return pool.query(
-    `INSERT INTO orders (order_id,order_date,address,price,shipping,total_price,payment_method,product_id,customer_id,image) VALUES (${order_id},'${order_date}','${address}',${price},${shipping},${total_price},'${payment_method}',${product_id},${customer_id},'${image}') `
+    `INSERT INTO orders (id_order,product_id,id_customer,quantity) VALUES ('${id_order}','${product_id}','${id_customer}',${quantity}) `
   )
 }
 
 const updateOrder = (data) => {
   const {
-    order_id,
-    order_date,
-    address,
-    price,
-    shipping,
-    total_price,
-    payment_method,
+    id_order,
     product_id,
-    customer_id,
-    image
+    id_customer
   } = data
   return pool.query(
-    `UPDATE orders SET order_date = '${order_date}', address = '${address}', price = ${price}, shipping = ${shipping}, total_price = ${total_price}, payment_method = '${payment_method}', product_id = ${product_id}, customer_id = ${customer_id}, image = '${image}' WHERE order_id = ${order_id}`
+    `UPDATE orders SET id_order = '${id_order}', product_id = '${product_id}', id_customer = ${id_customer} WHERE id_order = ${id_order}`
   )
 }
 
-const deleteOrder = (id) => {
-  return pool.query(`DELETE FROM orders WHERE order_id = ${id}`)
+const deleteOrder = (id_customer) => {
+  return pool.query(`DELETE FROM orders WHERE id_customer = ${id_customer}`)
 }
 
 const countData = () => {
@@ -72,7 +48,7 @@ const countData = () => {
 }
 
 const findId = (id) => {
-  return pool.query(`SELECT COUNT(*) FROM orders WHERE order_id = ${id}`)
+  return pool.query(`SELECT COUNT(*) FROM orders WHERE id_order = '${id}'`)
 }
 
 module.exports = {

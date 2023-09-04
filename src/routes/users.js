@@ -1,13 +1,16 @@
 const express = require('express')
 const router = express.Router()
 const userController = require('../controller/users')
-const { protect, validateAdmin } = require('../middleware/auth')
+const uploadProfile = require("../middleware/uploadProfile");
+// const { protect, validateAdmin } = require('../middleware/auth')
 
 router
   .post('/register', userController.registerUser)
   .post('/login', userController.loginUser)
-  .get('/profile', protect, userController.profile)
+  .put('/:id',uploadProfile, userController.updateUser)
+  .get('/profile', userController.profile)
   .post('/refreshToken', userController.refreshToken)
-  .get('/', protect, validateAdmin, userController.selectAllUsers)
+  .get('/:id', userController.getDetailUser)
+  // .get('/', protect, validateAdmin, userController.selectAllUsers)
 
 module.exports = router

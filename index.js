@@ -15,7 +15,7 @@ app.use(helmet())
 app.use(xss())
 app.use(morgan('dev'))
 app.use('/', mainRouter)
-app.use('/img', express.static('src/upload'))
+app.use(express.static('upload'))
 app.all('*', (req, res, next) => {
   next(new createError.NotFound())
 })

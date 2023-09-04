@@ -1,4 +1,4 @@
-const { findEmail, create, selectAllUsers,findId,updateUsers,selectUser } = require('../model/users')
+const { findEmail, create, selectAllSellers,updateSeller, selectSeller,findId } = require('../model/sellers')
 const bcrypt = require('bcryptjs')
 const { v4: uuidv4 } = require('uuid')
 const jwt = require('jsonwebtoken')
@@ -7,9 +7,9 @@ const commonHelper = require('../helper/common')
 const cloudinary = require("../middleware/cloudinary");
 
 
-const userController = {
-  registerUser: async (req, res) => {
-    const { fullname, email, password, role } = req.body
+const sellersController = {
+  registerSellers: async (req, res) => {
+    const { store_name, email, password, role } = req.body
     const { rowCount } = await findEmail(email)
     if (rowCount) {
       return res.json({ message: 'email is already taken' })
@@ -20,7 +20,7 @@ const userController = {
       id,
       email,
       passwordHash,
-      fullname,
+      store_name,
       role
     }
     create(data)
@@ -31,7 +31,7 @@ const userController = {
         console.log(err)
       })
   },
-  loginUser: async (req, res) => {
+  loginSellers: async (req, res) => {
     const { email, password } = req.body
     const {
       rows: [user]
@@ -73,9 +73,9 @@ const userController = {
     }
     commonHelper.response(res, result, 200, 'token is already generate')
   },
-  selectAllUsers: async (req, res) => {
+  selectAllSellers: async (req, res) => {
     try {
-      const users = await selectAllUsers()
+      const users = await selectAllSellers()
       commonHelper.response(res, users.rows, 200, 'Get all users success')
     } catch (err) {
       console.log(err)
@@ -85,10 +85,9 @@ const userController = {
   updateUser: async (req, res) => {
     const id = req.params.id;
     const {
-      fullname,
+      store_name,
       phone_number,
-      gender,
-      birth,
+      store_description,
     } = req.body;
 
     try {
@@ -103,14 +102,13 @@ const userController = {
 
       const data = {
         id,
-        fullname,
+        store_name,
         phone_number,
-        gender,
-        birth,
+        store_description,
         photo_profile
       };
 
-      const result = await updateUsers(data);
+      const result = await updateSeller(data);
       commonHelper.response(res, result.rows, 200, 'Profile updated successfully');
     } catch (err) {
       console.log(err);
@@ -123,12 +121,13 @@ const userController = {
     if (!rowCount) {
       return res.json({ message: "ID is Not Found" })
     }
-    selectUser(id)
+    selectSeller(id)
       .then((result) => {
         commonHelper.response(res, result.rows, 200, "get data success");
       })
       .catch((err) => res.send(err));
   },
+
 }
 
-module.exports = userController
+module.exports =sellersController

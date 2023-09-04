@@ -18,7 +18,7 @@ const searchProduct = (search, limit, offset, sortby, sort) => {
 }
 
 const selectProduct = (id) => {
-  return pool.query(`SELECT * FROM products WHERE product_id = ${id}`)
+  return pool.query(`SELECT * FROM products WHERE product_id = '${id}'`)
 }
 
 const insertProduct = (data) => {
@@ -32,10 +32,12 @@ const insertProduct = (data) => {
     stock,
     image,
     rating,
-    category_id
+    category_id,
+    description,
+    id_seller
   } = data
   return pool.query(
-    `INSERT INTO products (product_id,product_name,brand,price,color,size,stock,image,rating,category_id) VALUES (${product_id},'${product_name}','${brand}',${price},'${color}',${size},${stock},'${image}',${rating},${category_id}) `
+    `INSERT INTO products (product_id,product_name,brand,price,color,size,stock,image,rating,category_id,description,id_seller) VALUES ('${product_id}','${product_name}','${brand}',${price},'${color}',${size},${stock},'${image}',${rating},${category_id},'${description}','${id_seller}') `
   )
 }
 
@@ -50,15 +52,21 @@ const updateProduct = (data) => {
     stock,
     image,
     rating,
-    category_id
+    category_id,
+    description,
+    id_seller
   } = data
   return pool.query(
-    `UPDATE products SET product_name = '${product_name}', brand = '${brand}', price = ${price}, color = '${color}', size = ${size}, stock = ${stock}, image = '${image}', rating = ${rating}, category_id = ${category_id} WHERE product_id = ${product_id}`
+    `UPDATE products SET product_name = '${product_name}', brand = '${brand}', price = ${price}, color = '${color}', size = ${size}, stock = ${stock}, image = '${image}', rating = ${rating}, category_id = ${category_id}, description = '${description}', id_seller = '${id_seller}' WHERE product_id = '${product_id}'`
   )
 }
 
 const deleteProduct = (id) => {
-  return pool.query(`DELETE FROM products WHERE product_id = ${id}`)
+  return pool.query(`DELETE FROM products WHERE product_id = '${id}'`)
+}
+
+const showProductsBySellerId = (id) => {
+  return pool.query(`SELECT * FROM products WHERE id_seller = '${id}'`);
 }
 
 const countData = () => {
@@ -67,7 +75,7 @@ const countData = () => {
 
 const findId = (product_id) => {
   return new Promise((resolve, reject) =>
-    pool.query(`SELECT product_id FROM products WHERE Product_id=${product_id}`, (error, result) => {
+    pool.query(`SELECT product_id FROM products WHERE Product_id='${product_id}'`, (error, result) => {
       if (!error) {
         resolve(result)
       } else {
@@ -84,6 +92,7 @@ module.exports = {
   insertProduct,
   updateProduct,
   deleteProduct,
+  showProductsBySellerId,
   countData,
   findId
 }
