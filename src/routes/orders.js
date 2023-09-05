@@ -7,6 +7,6 @@ router
   .get('/users/:id_customer', ordersController.getDetailOrder)
   .post('/', ordersController.createOrder)
   .put('/:order_id', ordersController.updateOrder)
-  .delete('/:order_id', ordersController.deleteOrder)
+  .delete('/:id_order', ordersController.deleteOrder)
 
 module.exports = router

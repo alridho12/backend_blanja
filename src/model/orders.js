@@ -39,16 +39,24 @@ const updateOrder = (data) => {
   )
 }
 
-const deleteOrder = (id_customer) => {
-  return pool.query(`DELETE FROM orders WHERE id_customer = ${id_customer}`)
+const deleteOrder = (id) => {
+  return pool.query(`DELETE FROM orders WHERE id_order = '${id}'`)
 }
 
 const countData = () => {
   return pool.query('SELECT COUNT(*) FROM orders')
 }
 
-const findId = (id) => {
-  return pool.query(`SELECT COUNT(*) FROM orders WHERE id_order = '${id}'`)
+const findId = (id_order) => {
+  return new Promise((resolve, reject) =>
+    pool.query(`SELECT COUNT(*) FROM orders WHERE id_order='${id_order}'`, (error, result) => {
+      if (!error) {
+        resolve(result)
+      } else {
+        reject(error)
+      }
+    })
+  )
 }
 
 module.exports = {

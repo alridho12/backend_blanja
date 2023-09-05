@@ -135,7 +135,7 @@ const ordersController = {
   },
   deleteOrder: async (req, res) => {
     try {
-      const id = Number(req.params.id_order)
+      const id =(req.params.id_order)
       const { rowCount } = await findId(id)
       if (!rowCount) {
         return res.json({ message: 'ID is Not Found' })
