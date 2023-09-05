@@ -37,7 +37,7 @@ const insertProduct = (data) => {
     id_seller
   } = data
   return pool.query(
-    `INSERT INTO products (product_id,product_name,brand,price,color,size,stock,image,rating,category_id,description,id_seller) VALUES ('${product_id}','${product_name}','${brand}',${price},'${color}',${size},${stock},'${image}',${rating},${category_id},'${description}','${id_seller}') `
+    `INSERT INTO products (product_id,product_name,brand,price,color,size,stock,image,rating,category_id,description,id_seller) VALUES ('${product_id}',"${product_name}","${brand}",${price},'${color}',${size},${stock},'${image}',${rating},${category_id},"${description}",'${id_seller}') `
   )
 }
 
@@ -57,7 +57,7 @@ const updateProduct = (data) => {
     id_seller
   } = data
   return pool.query(
-    `UPDATE products SET product_name = '${product_name}', brand = '${brand}', price = ${price}, color = '${color}', size = ${size}, stock = ${stock}, image = '${image}', rating = ${rating}, category_id = ${category_id}, description = '${description}', id_seller = '${id_seller}' WHERE product_id = '${product_id}'`
+    `UPDATE products SET product_name = "${product_name}", brand = "${brand}", price = ${price}, color = '${color}', size = ${size}, stock = ${stock}, image = '${image}', rating = ${rating}, category_id = ${category_id}, description = "${description}", id_seller = '${id_seller}' WHERE product_id = '${product_id}'`
   )
 }
 
