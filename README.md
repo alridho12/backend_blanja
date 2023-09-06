@@ -9,7 +9,7 @@
     <br />
     <a href="https://react-blanja-g2voapec6-rajaalridho-gmailcom.vercel.app/">View Demo</a>
     ·
-    <a href="https://github.com/alridho12/backend_blanja/">Api Demo</a>
+    <a href="https://backend-blanja-lyart.vercel.app/">Api Demo</a>
   </p>
 </p>
 
@@ -108,4 +108,4 @@ API endpoint list are also available as published postman documentation
 
 :rocket: [`Demo Blanja`](https://react-blanja-g2voapec6-rajaalridho-gmailcom.vercel.app/)
 
-Project link : [https://github.com/alridho12/backend_blanja](https://github.com/alridho12/backend_blanja))
+Project link : [https://github.com/alridho12/backend_blanja](https://github.com/alridho12/backend_blanja)
